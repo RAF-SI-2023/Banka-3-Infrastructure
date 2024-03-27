@@ -1,0 +1,11 @@
+version: "3"
+services:
+  user-service:
+    image: services/user-service
+    build:
+      context: ${BACKEND_REPO_ABSOLUTE_PATH}/user-service/
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    restart: on-failure
+
