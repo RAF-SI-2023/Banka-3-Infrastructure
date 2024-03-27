@@ -4,7 +4,7 @@ services:
     image: services/user-service
     build:
       context: ${BACKEND_REPO_ABSOLUTE_PATH}/user-service/
-      dockerfile: Dockerfile
+      dockerfile: ${INFRA_REPO_ABSOLUTE_PATH}/images/user-service.Dockerfile
     ports:
       - "8080:8080"
     restart: on-failure
