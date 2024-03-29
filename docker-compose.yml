@@ -12,7 +12,7 @@ services:
     restart: on-failure
     depends_on:
       - user-service-db
-  
+
   user-service-db:
     image: postgres:latest
     environment:
@@ -26,8 +26,62 @@ services:
     ports:
       - "5432:5432"
 
+  email-service:
+    image: services/email-service 
+    build:
+      context: ${BACKEND_REPO_ABSOLUTE_PATH}/email-service/ 
+      dockerfile: ${INFRA_REPO_ABSOLUTE_PATH}/images/email-service.Dockerfile
+    networks:
+      - user-service-network
+    ports:
+      - "8081:8081"
+    restart: on-failure
+    depends_on:
+      - user-service
+
+  email-service-db:
+    image: postgres:latest
+    environment:
+      POSTGRES_DB: email-service
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
+    networks:
+      - user-service-network
+    volumes:
+      - email_service_db_data:/var/lib/db
+    ports:
+      - "5433:5432"
+
+  bank-service:
+    image: services/bank-service 
+    build:
+      context: ${BACKEND_REPO_ABSOLUTE_PATH}/bank-service/ 
+      dockerfile: ${INFRA_REPO_ABSOLUTE_PATH}/images/bank-service.Dockerfile
+    networks:
+      - user-service-network
+    ports:
+      - "8082:8082"
+    restart: on-failure
+    depends_on:
+      - user-service
+
+  bank-service-db:
+    image: postgres:latest
+    environment:
+      POSTGRES_DB: bank-service
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
+    networks:
+      - user-service-network
+    volumes:
+      - bank_service_db_data:/var/lib/db
+    ports:
+      - "5434:5432"
+
 networks:
   user-service-network:
 
 volumes:
   user_service_db_data:
+  email_service_db_data:
+  bank_service_db_data:
