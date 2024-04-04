@@ -78,6 +78,15 @@ services:
     ports:
       - "5434:5432"
 
+  angular-frontend:
+      build:
+        context: ${FRONTEND_REPO_ABSOLUTE_PATH}/
+        dockerfile: ${INFRA_REPO_ABSOLUTE_PATH}/images/frontend.Dockerfile
+      ports:
+        - "80:80"  
+      networks:
+        - user-service-network
+
 networks:
   user-service-network:
 
