@@ -53,7 +53,8 @@ services:
     restart: on-failure
     depends_on:
       - database
-
+      - user-service
+      
   database:
     image: postgres:latest
     environment:
