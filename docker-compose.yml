@@ -1,5 +1,7 @@
 version: "3"
+
 services:
+
   user-service:
     image: services/user-service
     build:
@@ -11,25 +13,12 @@ services:
       - "8080:8080"
     restart: on-failure
     depends_on:
-      - user-service-db
-
-  user-service-db:
-    image: postgres:latest
-    environment:
-      POSTGRES_DB: user-service
-      POSTGRES_USER: root
-      POSTGRES_PASSWORD: root
-    networks:
-      - user-service-network
-    volumes:
-      - user_service_db_data:/var/lib/db
-    ports:
-      - "5432:5432"
+      - database
 
   email-service:
-    image: services/email-service 
+    image: services/email-service
     build:
-      context: ${BACKEND_REPO_ABSOLUTE_PATH}/email-service/ 
+      context: ${BACKEND_REPO_ABSOLUTE_PATH}/email-service/
       dockerfile: ${INFRA_REPO_ABSOLUTE_PATH}/images/email-service.Dockerfile
     networks:
       - user-service-network
@@ -37,25 +26,12 @@ services:
       - "8081:8081"
     restart: on-failure
     depends_on:
-      - user-service
-
-  email-service-db:
-    image: postgres:latest
-    environment:
-      POSTGRES_DB: email-service
-      POSTGRES_USER: root
-      POSTGRES_PASSWORD: root
-    networks:
-      - user-service-network
-    volumes:
-      - email_service_db_data:/var/lib/db
-    ports:
-      - "5433:5432"
+      - database
 
   bank-service:
-    image: services/bank-service 
+    image: services/bank-service
     build:
-      context: ${BACKEND_REPO_ABSOLUTE_PATH}/bank-service/ 
+      context: ${BACKEND_REPO_ABSOLUTE_PATH}/bank-service/
       dockerfile: ${INFRA_REPO_ABSOLUTE_PATH}/images/bank-service.Dockerfile
     networks:
       - user-service-network
@@ -63,34 +39,45 @@ services:
       - "8082:8082"
     restart: on-failure
     depends_on:
-      - user-service
+      - database
 
-  bank-service-db:
+  exchange-service:
+    image: services/exchange-service
+    build:
+      context: ${BACKEND_REPO_ABSOLUTE_PATH}/exchange-service/
+      dockerfile: ${INFRA_REPO_ABSOLUTE_PATH}/images/exchange-service.Dockerfile
+    networks:
+      - user-service-network
+    ports:
+      - "8083:8083"
+    restart: on-failure
+    depends_on:
+      - database
+
+  database:
     image: postgres:latest
     environment:
-      POSTGRES_DB: bank-service
+      POSTGRES_DB: main_database
       POSTGRES_USER: root
-      POSTGRES_PASSWORD: root
+      POSTGRES_PASSWORD: password
     networks:
       - user-service-network
     volumes:
-      - bank_service_db_data:/var/lib/db
+      - database_data:/var/lib/postgresql/data
     ports:
-      - "5434:5432"
+      - "5432:5432"
 
   angular-frontend:
-      build:
-        context: ${FRONTEND_REPO_ABSOLUTE_PATH}/
-        dockerfile: ${INFRA_REPO_ABSOLUTE_PATH}/images/frontend.Dockerfile
-      ports:
-        - "80:80"  
-      networks:
-        - user-service-network
+    build:
+      context: ${FRONTEND_REPO_ABSOLUTE_PATH}/
+      dockerfile: ${INFRA_REPO_ABSOLUTE_PATH}/images/frontend.Dockerfile
+    ports:
+      - "80:80"
+    networks:
+      - user-service-network
 
 networks:
   user-service-network:
 
 volumes:
-  user_service_db_data:
-  email_service_db_data:
-  bank_service_db_data:
+  database_data:
