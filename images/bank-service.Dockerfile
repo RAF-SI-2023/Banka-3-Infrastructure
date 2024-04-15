@@ -11,6 +11,6 @@ ARG JAR_FILE=/app/target/*.jar
 COPY --from=builder ${JAR_FILE} app.jar
 
 # Expose port 8080
-EXPOSE 8080
+EXPOSE 8082
 
 ENTRYPOINT ["java","-jar","/app.jar"]
