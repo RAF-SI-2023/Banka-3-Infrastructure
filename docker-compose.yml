@@ -64,7 +64,8 @@ services:
     networks:
       - user-service-network
     volumes:
-      - database_data:/var/lib/postgresql/data
+      # - database_data:/var/lib/postgresql/data
+      - /Users/gliba/projects/RAF-SI-2023/Banka-3-Infrastructure-fork/init:/docker-entrypoint-initdb.d
     ports:
       - "5432:5432"
 

@@ -10,7 +10,7 @@ FROM openjdk:17-jdk-oraclelinux8
 ARG JAR_FILE=/app/target/*.jar
 COPY --from=builder ${JAR_FILE} app.jar
 
-# Expose port 8080
-EXPOSE 8080
+# Expose port 8083
+EXPOSE 8083
 
 ENTRYPOINT ["java","-jar","/app.jar"]
