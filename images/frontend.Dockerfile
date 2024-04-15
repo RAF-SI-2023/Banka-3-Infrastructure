@@ -29,6 +29,9 @@ RUN rm -rf /usr/share/nginx/html/*
 # Copy the build output from the 'build' stage to replace the default nginx contents.
 COPY --from=build /usr/src/app/dist/* /usr/share/nginx/html
 
+# Copy custom Nginx configuration
+COPY ./nginx.conf /etc/nginx/nginx.conf
+
 # Expose port 80
 EXPOSE 80
 
