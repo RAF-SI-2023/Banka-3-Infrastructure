@@ -78,8 +78,18 @@ services:
     networks:
       - user-service-network
 
+  redis:
+    image: redis:latest
+    ports:
+      - "6379:6379"
+    networks:
+      - user-service-network
+    volumes:
+      - redis_data:/data
+
 networks:
   user-service-network:
 
 volumes:
   database_data:
+  redis_data:
