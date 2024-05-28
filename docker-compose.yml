@@ -26,7 +26,7 @@ services:
       - "8081:8081"
     restart: on-failure
     depends_on:
-      - database
+      - mongo
 
   bank-service:
     image: services/bank-service
@@ -54,6 +54,15 @@ services:
     depends_on:
       - database
       - user-service
+
+  angular-frontend:
+    build:
+      context: ${FRONTEND_REPO_ABSOLUTE_PATH}/
+      dockerfile: ${INFRA_REPO_ABSOLUTE_PATH}/images/frontend.Dockerfile
+    ports:
+      - "80:80"
+    networks:
+      - user-service-network
       
   database:
     image: postgres:latest
@@ -64,19 +73,9 @@ services:
     networks:
       - user-service-network
     volumes:
-      # - database_data:/var/lib/postgresql/data
       - ${INFRA_REPO_ABSOLUTE_PATH}/init:/docker-entrypoint-initdb.d
     ports:
       - "5432:5432"
-
-  angular-frontend:
-    build:
-      context: ${FRONTEND_REPO_ABSOLUTE_PATH}/
-      dockerfile: ${INFRA_REPO_ABSOLUTE_PATH}/images/frontend.Dockerfile
-    ports:
-      - "80:80"
-    networks:
-      - user-service-network
 
   redis:
     image: redis:latest
@@ -98,6 +97,7 @@ services:
     environment:
       MONGO_INITDB_ROOT_USERNAME: mongo_user
       MONGO_INITDB_ROOT_PASSWORD: mongo_password
+      MONGO_INITDB_DATABASE: email_service_database
     restart: always
 
 networks:
