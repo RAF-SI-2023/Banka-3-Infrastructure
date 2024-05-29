@@ -1,0 +1,59 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: exchange-service
+  namespace: {{ .Release.Namespace }}
+  labels:
+    service: exchange-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      service: exchange-service
+  template:
+    metadata:
+      labels:
+        service: exchange-service
+    spec:
+      containers:
+      - image: harbor.k8s.elab.rs/banka-3/exchange-service:{{ .Values.imageTag }}
+        imagePullPolicy: Always
+        name: exchange-service
+        env:
+          - name: spring.datasource.url
+            value: jdbc:postgresql://banka-3-ha:5432/main_database?currentSchema=exchange_service_schema
+          - name: spring.datasource.username
+            valueFrom:
+              secretKeyRef:
+                name: banka-3-pguser-admin
+                key: user
+          - name: spring.datasource.password
+            valueFrom:
+              secretKeyRef:
+                name: banka-3-pguser-admin
+                key: password
+          - name: spring.jpa.hibernate.ddl-auto
+            value: update
+        resources:
+          requests:
+            cpu: 1
+            memory: 1Gi
+          limits:
+            cpu: 2
+            memory: 2Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: exchange-service
+  namespace: {{ .Release.Namespace }}
+  labels:
+    service: exchange-service
+spec:
+  type: ClusterIP
+  selector:
+    service: exchange-service
+  ports:
+    - port: 8083
+      protocol: TCP
+      targetPort: 8083
