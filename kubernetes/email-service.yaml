@@ -20,20 +20,8 @@ spec:
         imagePullPolicy: Always
         name: email-service
         env:
-          - name: spring.datasource.url
-            value: jdbc:postgresql://banka-3-ha:5432/main_database?currentSchema=email_service_schema
-          - name: spring.datasource.username
-            valueFrom:
-              secretKeyRef:
-                name: banka-3-pguser-admin
-                key: user
-          - name: spring.datasource.password
-            valueFrom:
-              secretKeyRef:
-                name: banka-3-pguser-admin
-                key: password
-          - name: spring.jpa.hibernate.ddl-auto
-            value: update
+          - name: spring.data.mongodb.uri
+            value: mongodb://root:root@mongodb:27017/email_service_database?authSource=admin
         resources:
           requests:
             cpu: 1
