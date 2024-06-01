@@ -5,11 +5,11 @@ metadata:
   namespace: {{ .Release.Namespace }}
 data:
   init.sql: |
-    \c main_database;
+    \c main_database
     CREATE SCHEMA IF NOT EXISTS user_service_schema AUTHORIZATION admin;
-    CREATE SCHEMA IF NOT EXISTS email_service_schema AUTHORIZATION admin;
     CREATE SCHEMA IF NOT EXISTS bank_service_schema AUTHORIZATION admin;
     CREATE SCHEMA IF NOT EXISTS exchange_service_schema AUTHORIZATION admin;
+
 ---
 apiVersion: postgres-operator.crunchydata.com/v1beta1
 kind: PostgresCluster
