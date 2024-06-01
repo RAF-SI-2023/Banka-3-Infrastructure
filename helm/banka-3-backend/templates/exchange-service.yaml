@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: exchange-service
-  namespace: banka-3-dev
+  namespace: {{ .Release.Namespace }}
   labels:
     service: exchange-service
 spec:
@@ -16,7 +16,7 @@ spec:
         service: exchange-service
     spec:
       containers:
-      - image: harbor.k8s.elab.rs/banka-3/exchange-service:latest
+      - image: harbor.k8s.elab.rs/banka-3/exchange-service:{{ .Values.imageTag }}
         imagePullPolicy: Always
         name: exchange-service
         env:
@@ -46,7 +46,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: exchange-service
-  namespace: banka-3-dev
+  namespace: {{ .Release.Namespace }}
   labels:
     service: exchange-service
 spec:

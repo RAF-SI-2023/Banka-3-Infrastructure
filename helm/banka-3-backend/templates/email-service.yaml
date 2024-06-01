@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: email-service
-  namespace: banka-3-dev
+  namespace: {{ .Release.Namespace }}
   labels:
     service: email-service
 spec:
@@ -16,24 +16,12 @@ spec:
         service: email-service
     spec:
       containers:
-      - image: harbor.k8s.elab.rs/banka-3/email-service:latest
+      - image: harbor.k8s.elab.rs/banka-3/email-service:{{ .Values.imageTag }}
         imagePullPolicy: Always
         name: email-service
         env:
-          - name: spring.datasource.url
-            value: jdbc:postgresql://banka-3-ha:5432/main_database?currentSchema=email_service_schema
-          - name: spring.datasource.username
-            valueFrom:
-              secretKeyRef:
-                name: banka-3-pguser-admin
-                key: user
-          - name: spring.datasource.password
-            valueFrom:
-              secretKeyRef:
-                name: banka-3-pguser-admin
-                key: password
-          - name: spring.jpa.hibernate.ddl-auto
-            value: update
+          - name: spring.data.mongodb.uri
+            value: mongodb://root:root@{{ .Release.Name }}-mongodb:27017/email_service_database?authSource=admin
         resources:
           requests:
             cpu: 1
@@ -46,7 +34,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: email-service
-  namespace: banka-3-dev
+  namespace: {{ .Release.Namespace }}
   labels:
     service: email-service
 spec:

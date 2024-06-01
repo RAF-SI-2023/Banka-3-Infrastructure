@@ -1,0 +1,10 @@
+apiVersion: v2
+name: banka-3-backend
+description: Backend za projekat tima banka 3
+type: application
+version: 1.0.0
+appVersion: "1.0.0"
+dependencies:
+- name: mongodb
+  version: "15.6.1"
+  repository: "oci://registry-1.docker.io/bitnamicharts"

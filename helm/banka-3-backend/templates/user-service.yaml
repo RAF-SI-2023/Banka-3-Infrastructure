@@ -1,27 +1,27 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: bank-service
-  namespace: banka-3-dev
+  name: user-service
+  namespace: {{ .Release.Namespace }}
   labels:
-    service: bank-service
+    service: user-service
 spec:
   replicas: 1
   selector:
     matchLabels:
-      service: bank-service
+      service: user-service
   template:
     metadata:
       labels:
-        service: bank-service
+        service: user-service
     spec:
       containers:
-      - image: harbor.k8s.elab.rs/banka-3/bank-service:latest
+      - image: harbor.k8s.elab.rs/banka-3/user-service:{{ .Values.imageTag }}
         imagePullPolicy: Always
-        name: bank-service
+        name: user-service
         env:
           - name: spring.datasource.url
-            value: jdbc:postgresql://banka-3-ha:5432/main_database?currentSchema=bank_service_schema
+            value: jdbc:postgresql://banka-3-ha:5432/main_database?currentSchema=user_service_schema
           - name: spring.datasource.username
             valueFrom:
               secretKeyRef:
@@ -45,15 +45,15 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: bank-service
-  namespace: banka-3-dev
+  name: user-service
+  namespace: {{ .Release.Namespace }}
   labels:
-    service: bank-service
+    service: user-service
 spec:
   type: ClusterIP
   selector:
-    service: bank-service
+    service: user-service
   ports:
-    - port: 8082
+    - port: 8080
       protocol: TCP
-      targetPort: 8082
+      targetPort: 8080

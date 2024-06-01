@@ -1,0 +1,5 @@
+imageTag: latest
+host: banka-3-dev.si.raf.edu.rs
+mongodb: 
+  auth:
+    rootPassword: root
