@@ -24,10 +24,10 @@ spec:
             value: mongodb://root:root@{{ .Release.Name }}-mongodb:27017/email_service_database?authSource=admin
         resources:
           requests:
-            cpu: 1
+            cpu: 300m
             memory: 1Gi
           limits:
-            cpu: 2
+            cpu: 1
             memory: 2Gi
 ---
 apiVersion: v1
