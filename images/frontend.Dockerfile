@@ -19,7 +19,13 @@ RUN npm install
 COPY . .
 
 # Conditional build based on the environment
-RUN if [ "$ENV" = "production" ]; then npm run build:prod; else npm run build; fi
+RUN if [ "$ENV" = "production" ]; then \
+        npm run build:prod; \
+    elif [ "$ENV" = "development" ]; then \
+        npm run build:dev; \
+    else \
+        npm run build; \
+    fi
 
 # Stage 2: Serve app with nginx server
 
