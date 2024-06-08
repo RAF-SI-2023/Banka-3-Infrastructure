@@ -8,3 +8,4 @@ dependencies:
 - name: mongodb
   version: "15.6.1"
   repository: "oci://registry-1.docker.io/bitnamicharts"
+
