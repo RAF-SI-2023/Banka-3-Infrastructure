@@ -22,6 +22,12 @@ spec:
         env:
           - name: spring.data.mongodb.uri
             value: mongodb://root:root@{{ .Release.Name }}-mongodb:27017/email_service_database?authSource=admin
+          - name: sendgrid-key
+            valueFrom:
+              secretKeyRef:
+                key: token
+                name: sendgrid
+
         resources:
           requests:
             cpu: 300m
