@@ -100,6 +100,27 @@ services:
       MONGO_INITDB_DATABASE: email_service_database
     restart: always
 
+  prometheus:
+    image: quay.io/prometheus/prometheus:v2.44.0
+    ports:
+      - "9090:9090"
+    volumes:
+      - "./prometheus.yml:/etc/prometheus/prometheus.yml"
+    profiles:
+      - bank-service
+      - all
+
+  grafana:
+    image: docker.io/grafana/grafana-oss:9.5.2
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana:/var/lib/grafana
+    user: 'root'
+    profiles:
+      - bank-service
+      - all
+
 networks:
   user-service-network:
 
@@ -107,3 +128,4 @@ volumes:
   database_data:
   redis_data:
   mongo_data:
+  grafana:
