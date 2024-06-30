@@ -14,6 +14,9 @@ services:
     restart: on-failure
     depends_on:
       - database
+    profiles:
+      - user-service
+      - all
 
   email-service:
     image: services/email-service
@@ -40,6 +43,9 @@ services:
     restart: on-failure
     depends_on:
       - database
+    profiles:
+      - bank-service
+      - all
 
   exchange-service:
     image: services/exchange-service
@@ -76,6 +82,7 @@ services:
       - ${INFRA_REPO_ABSOLUTE_PATH}/init:/docker-entrypoint-initdb.d
     ports:
       - "5432:5432"
+    
 
   redis:
     image: redis:latest
@@ -107,8 +114,11 @@ services:
     volumes:
       - "./prometheus.yml:/etc/prometheus/prometheus.yml"
     profiles:
+      - user-service
       - bank-service
       - all
+    networks:
+      - user-service-network
 
   grafana:
     image: docker.io/grafana/grafana-oss:9.5.2
@@ -118,8 +128,11 @@ services:
       - grafana:/var/lib/grafana
     user: 'root'
     profiles:
+      - user-service
       - bank-service
       - all
+    networks:
+      - user-service-network
 
 networks:
   user-service-network:
