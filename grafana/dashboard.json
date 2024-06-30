@@ -1657,7 +1657,37 @@
           "tagsQuery": "",
           "type": "query",
           "useTags": false
-        }
+        },
+        {
+            "current": {
+              "selected": false,
+              "text": "bank-service:8082",
+              "value": "bank-service:8082"
+            },
+            "datasource": {
+              "type": "prometheus",
+              "uid": "${DS_PROMETHEUS}"
+            },
+            "definition": "label_values(jvm_classes_loaded_classes, job)",
+            "hide": 0,
+            "includeAll": false,
+            "label": "Job",
+            "multi": false,
+            "name": "job",
+            "options": [],
+            "query": {
+              "query": "label_values(jvm_classes_loaded_classes, job)",
+              "refId": "StandardVariableQuery"
+            },
+            "refresh": 1,
+            "regex": "",
+            "skipUrlSync": false,
+            "sort": 1,
+            "tagValuesQuery": "",
+            "tagsQuery": "",
+            "type": "query",
+            "useTags": false
+          }
       ]
     },
     "time": {
